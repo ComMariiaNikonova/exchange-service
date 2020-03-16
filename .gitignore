@@ -114,8 +114,6 @@ project/plugins/project/
 /allure-results/
 /.allure/
 .gradle/
-.idea/
-.idea
 build/
 gradle/
 gradlew
