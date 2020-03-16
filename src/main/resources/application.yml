@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: exchange-service
+  server:
+    port: 8080
+
+  datasource:
+    url:      jdbc:mysql://localhost:3306/data_exch
+    username: root
+    password: pass
+    driver: com.mysql.cj.jdbc.Driver
+  main:
+    allow-bean-definition-overriding: true
