@@ -19,11 +19,11 @@ public class Exchange implements Serializable {
 
     @DecimalMin(value = "0.00", message = "Amount be grater than 0.00 ")
     @NumberFormat(pattern = "#0,00")
-    BigDecimal amountTo;
+    BigDecimal amountFrom;
 
     @DecimalMin(value = "0.00", message = "Amount be grater than 0.00 ")
     @NumberFormat(pattern = "#0,00")
-    BigDecimal amountFrom;
+    BigDecimal amountTo;
 
     @Enumerated(EnumType.STRING)
     @NotNull

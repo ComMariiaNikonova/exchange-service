@@ -38,18 +38,18 @@ public class ExchangeServiceTest {
 
     @Test
     public void handleExchangeGive() {
-        Exchange exchange = service.handleExchange(new Exchange(BigDecimal.valueOf(0),
-                BigDecimal.valueOf(180), Currency.EUR, Currency.RUB, OperationType.GIVE));
+        Exchange exchange = service.handleExchange(new Exchange(BigDecimal.valueOf(180),
+                BigDecimal.valueOf(0), Currency.EUR, Currency.RUB, OperationType.GIVE));
 
         assertThat(exchange.getAmountTo(), Matchers.comparesEqualTo(BigDecimal.valueOf(9720)));
     }
 
     @Test
     public void handleExchangeGet() {
-        Exchange exchange = service.handleExchange(new Exchange(BigDecimal.valueOf(180),
-                BigDecimal.valueOf(0), Currency.EUR, Currency.RUB, OperationType.GET));
+        Exchange exchange = service.handleExchange(new Exchange(BigDecimal.valueOf(0),
+                BigDecimal.valueOf(180), Currency.EUR, Currency.RUB, OperationType.GET));
 
-        assertThat(exchange.getAmountTo(), Matchers.comparesEqualTo(BigDecimal.valueOf(9720)));
+        assertThat(exchange.getAmountFrom(), Matchers.comparesEqualTo(BigDecimal.valueOf(11880.0)));
     }
 
 

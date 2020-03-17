@@ -18,22 +18,18 @@ import java.util.function.Predicate;
 @RequiredArgsConstructor
 public class ExchangeService {
 
-    private final CommissionRepository comissionRepository;
+    private final CommissionRepository commissionRepository;
 
     private final RateRepository rateRepository;
 
     public final List<Commission> getCommissionPt() {
-        return comissionRepository.findAll();
+        return commissionRepository.findAll();
     }
 
-    static Predicate<Exchange> hasNoContractSupport = exchange -> ((Objects.isNull(exchange.getAmountTo()) ||
-            exchange.getAmountTo().compareTo(BigDecimal.ZERO) == 0)
-            && exchange.getOperationType().equals(OperationType.GET)) ||
-            ((Objects.isNull(exchange.getAmountFrom()) || exchange.getAmountFrom().compareTo(BigDecimal.ZERO) == 0)
-                    && exchange.getOperationType().equals(OperationType.GIVE));
+    static Predicate<Exchange> hasNoContractSupport = exchange -> (hasNoContractSupportPredicate(exchange));
 
     public Commission createCommissionPt(Commission commission) {
-        return comissionRepository.save(commission);
+        return commissionRepository.save(commission);
     }
 
     public List<Rate> getRate() {
@@ -52,7 +48,7 @@ public class ExchangeService {
                             "GIVE operationType associated with currencyFrom NON Nullable value");
         }
 
-        Commission commission = comissionRepository.
+        Commission commission = commissionRepository.
                 findCommissionByFromAndTo(exchange.getCurrencyFrom(), exchange.getCurrencyTo());
 
         Rate rate = rateRepository.
@@ -84,4 +80,13 @@ public class ExchangeService {
                 multiply(commission.getCommissionPt());
         exchange.setAmountTo(exchange.getAmountFrom().subtract(commissionAmount).multiply(rate.getRate()));
     }
+
+    private static boolean hasNoContractSupportPredicate(Exchange exchange) {
+        return ((Objects.isNull(exchange.getAmountTo()) ||
+                exchange.getAmountTo().compareTo(BigDecimal.ZERO) == 0)
+                && exchange.getOperationType().equals(OperationType.GET)) ||
+                ((Objects.isNull(exchange.getAmountFrom()) || exchange.getAmountFrom().compareTo(BigDecimal.ZERO) == 0)
+                        && exchange.getOperationType().equals(OperationType.GIVE));
+    }
+
 }
