@@ -8,7 +8,7 @@ docker run -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=pass -e MYSQL_USER=e
 2. Build with gradle: 
 gradle build
 
-3. Start application with:
+3. Start application artifact with:
 java -jar <jar>
 
 4. Perform request with Auth header (user hardcoded):
