@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "**/api/commission")
+@RequestMapping(value = "**/api/commissions")
 @ControllerAdvice
 @RequiredArgsConstructor
 class CommissionController {

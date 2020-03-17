@@ -21,7 +21,7 @@ public class Rate implements Serializable {
 
     @DecimalMin(value = "0.00", message = "Rate should be grater than 0.00 ")
     @Column(name = "rate")
-    @NumberFormat(pattern = "#0,00")
+    @NumberFormat(pattern = "#0.00")
     BigDecimal rate;
 
     @Id

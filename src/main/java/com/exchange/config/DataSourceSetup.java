@@ -56,10 +56,10 @@ public class DataSourceSetup implements CommandLineRunner {
                 .stream().map(name -> name.split(" ")).collect(Collectors.toList());
 
         List<Object[]> rates = Arrays.asList
-                ("0.1 EUR EUR", "0.6 EUR RUB", "0.8 EUR USD", "30 EUR UAH",
-                        "0.33 UAH EUR", "14 UAH RUB", "5 UAH USD", "67 UAH UAH",
-                        "0.89 USD EUR", "11 USD RUB", "4 USD USD", "0.74 USD UAH",
-                        "45 RUB EUR", "0.1 RUB RUB", "60 RUB USD", "8 RUB UAH")
+                ("1 EUR EUR", "0.6 EUR RUB", "0.8 EUR USD", "30 EUR UAH",
+                        "0.33 UAH EUR", "14 UAH RUB", "5 UAH USD", "1 UAH UAH",
+                        "0.89 USD EUR", "11 USD RUB", "1 USD USD", "0.74 USD UAH",
+                        "45 RUB EUR", "1 RUB RUB", "60 RUB USD", "8 RUB UAH")
                 .stream().map(name -> name.split(" ")).collect(Collectors.toList());
 
         jdbcTemplate.batchUpdate("INSERT INTO commission (commission, currency_from, currency_to) VALUES (?,?,?)",

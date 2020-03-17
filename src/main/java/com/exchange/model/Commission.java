@@ -24,9 +24,8 @@ public class Commission implements Serializable {
             "Commission percent should be in range 0.00 - 100.00")
     @DecimalMax(value = "100.00", message = "Commission percent should be lower than 100.00 " +
             "Commission percent should be in range 0.00 - 100.00")
-
     @Column(name = "commission")
-    @NumberFormat(pattern = "#0,00")
+    @NumberFormat(pattern = "#0.00")
     BigDecimal commissionPt;
 
     @Id
