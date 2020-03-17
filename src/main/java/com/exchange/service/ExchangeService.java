@@ -48,12 +48,19 @@ public class ExchangeService {
                             "GIVE operationType associated with currencyFrom NON Nullable value");
         }
 
-        Commission commission = commissionRepository.
-                findCommissionByFromAndTo(exchange.getCurrencyFrom(), exchange.getCurrencyTo());
-
-        Rate rate = rateRepository.
-                findRateByFromAndTo(exchange.getCurrencyFrom(), exchange.getCurrencyTo());
-
+        Commission commission;
+        Rate rate;
+        if (exchange.getOperationType().equals(OperationType.GIVE)) {
+            commission = commissionRepository.
+                    findCommissionByFromAndTo(exchange.getCurrencyFrom(), exchange.getCurrencyTo());
+            rate = rateRepository.
+                    findRateByFromAndTo(exchange.getCurrencyFrom(), exchange.getCurrencyTo());
+        } else {
+            commission = commissionRepository.
+                    findCommissionByFromAndTo(exchange.getCurrencyTo(), exchange.getCurrencyFrom());
+            rate = rateRepository.
+                    findRateByFromAndTo(exchange.getCurrencyTo(), exchange.getCurrencyFrom());
+        }
         switch (exchange.getOperationType()) {
             case GET:
                 setupExchangeGet(exchange, commission, rate);
@@ -70,7 +77,9 @@ public class ExchangeService {
         commissionAmount = exchange.getAmountTo().
                 divide(BigDecimal.valueOf(100)).
                 multiply(commission.getCommissionPt());
-        exchange.setAmountFrom(exchange.getAmountTo().add(commissionAmount).multiply(rate.getRate()));
+        exchange.setAmountFrom(exchange.getAmountTo().add(commissionAmount).multiply(rate.getRate()).
+                setScale(2, BigDecimal.ROUND_HALF_UP));
+        exchange.setAmountTo(exchange.getAmountTo().setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
     private void setupExchangeGive(Exchange exchange, Commission commission, Rate rate) {
@@ -78,7 +87,9 @@ public class ExchangeService {
         commissionAmount = exchange.getAmountFrom().
                 divide(BigDecimal.valueOf(100)).
                 multiply(commission.getCommissionPt());
-        exchange.setAmountTo(exchange.getAmountFrom().subtract(commissionAmount).multiply(rate.getRate()));
+        exchange.setAmountTo(exchange.getAmountFrom().subtract(commissionAmount).multiply(rate.getRate()).
+                setScale(2, BigDecimal.ROUND_HALF_UP));
+        exchange.setAmountFrom(exchange.getAmountFrom().setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
     private static boolean hasNoContractSupportPredicate(Exchange exchange) {

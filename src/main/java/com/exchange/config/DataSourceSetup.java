@@ -49,23 +49,23 @@ public class DataSourceSetup implements CommandLineRunner {
 
 
         List<Object[]> commissions = Arrays.asList
-                ("0.1 EUR EUR", "20.1 EUR RUB", "3 EUR USD", "0.45 EUR UAH",
-                        "21.1 UAH EUR", "4.1 UAH RUB", "5.5 UAH USD", "0.68 UAH UAH",
-                        "10.0 USD EUR", "11.4 USD RUB", "0.8 USD USD", "0.15 USD UAH",
-                        "99.1 RUB EUR", "4.1 RUB RUB", "0.8 RUB USD", "10.1 RUB UAH")
+                ("2 EUR EUR", "20 EUR RUB", "2 EUR USD", "5 EUR UAH",
+                        "5 UAH EUR", "10 UAH RUB", "5 UAH USD", "2 UAH UAH",
+                        "2 USD EUR", "30 USD RUB", "2 USD USD", "5 USD UAH",
+                        "20 RUB EUR", "2 RUB RUB", "30 RUB USD", "10 RUB UAH")
                 .stream().map(name -> name.split(" ")).collect(Collectors.toList());
 
         List<Object[]> rates = Arrays.asList
-                ("1 EUR EUR", "0.6 EUR RUB", "0.8 EUR USD", "30 EUR UAH",
-                        "0.33 UAH EUR", "14 UAH RUB", "5 UAH USD", "1 UAH UAH",
-                        "0.89 USD EUR", "11 USD RUB", "1 USD USD", "0.74 USD UAH",
-                        "45 RUB EUR", "1 RUB RUB", "60 RUB USD", "8 RUB UAH")
+                ("1 EUR EUR", "0.01 EUR RUB", "2 EUR USD", "30 EUR UAH",
+                        "0.33 UAH EUR", "0.1 UAH RUB", "25 UAH USD", "1 UAH UAH",
+                        "0.5 USD EUR", "0.01 USD RUB", "1 USD USD", "0.4 USD UAH",
+                        "100 RUB EUR", "1 RUB RUB", "100 RUB USD", "10 RUB UAH")
                 .stream().map(name -> name.split(" ")).collect(Collectors.toList());
 
         jdbcTemplate.batchUpdate("INSERT INTO commission (commission, currency_from, currency_to) VALUES (?,?,?)",
                 commissions);
         jdbcTemplate.batchUpdate("INSERT INTO rate (rate, currency_from, currency_to) VALUES (?,?,?)", rates);
 
-        log.info("App ready to use...");
+        log.info("Datasource ready to use...");
     }
 }

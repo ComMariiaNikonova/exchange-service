@@ -27,35 +27,43 @@ public class ExchangeServiceTest {
     @Before
     public void setUp() {
         service = new ExchangeService(commissionRepository, rateRepository);
-        Commission commission = new Commission(BigDecimal.valueOf(10), Currency.EUR, Currency.RUB);
+
+        Commission commission = new Commission(BigDecimal.valueOf(2), Currency.EUR, Currency.RUB);
         Mockito.when(commissionRepository.findCommissionByFromAndTo(Currency.EUR, Currency.RUB))
                 .thenReturn(commission);
 
-        Rate rate = new Rate(BigDecimal.valueOf(60), Currency.EUR, Currency.RUB);
+        Mockito.when(commissionRepository.findCommissionByFromAndTo(Currency.RUB, Currency.EUR))
+                .thenReturn(commission);
+
+        Rate rateGive = new Rate(BigDecimal.valueOf(0.5), Currency.EUR, Currency.RUB);
+        Rate rateGet = new Rate(BigDecimal.valueOf(2), Currency.EUR, Currency.RUB);
+
         Mockito.when(rateRepository.findRateByFromAndTo(Currency.EUR, Currency.RUB))
-                .thenReturn(rate);
+                .thenReturn(rateGive);
+        Mockito.when(rateRepository.findRateByFromAndTo(Currency.RUB, Currency.EUR))
+                .thenReturn(rateGet);
     }
 
     @Test
     public void handleExchangeGive() {
-        Exchange exchange = service.handleExchange(new Exchange(BigDecimal.valueOf(180),
-                BigDecimal.valueOf(0), Currency.EUR, Currency.RUB, OperationType.GIVE));
+        Exchange exchange = service.handleExchange(new Exchange(OperationType.GIVE, BigDecimal.valueOf(100),
+                BigDecimal.valueOf(0), Currency.EUR, Currency.RUB));
 
-        assertThat(exchange.getAmountTo(), Matchers.comparesEqualTo(BigDecimal.valueOf(9720)));
+        assertThat(exchange.getAmountTo(), Matchers.comparesEqualTo(BigDecimal.valueOf(49)));
     }
 
     @Test
     public void handleExchangeGet() {
-        Exchange exchange = service.handleExchange(new Exchange(BigDecimal.valueOf(0),
-                BigDecimal.valueOf(180), Currency.EUR, Currency.RUB, OperationType.GET));
+        Exchange exchange = service.handleExchange(new Exchange(OperationType.GET, BigDecimal.valueOf(0),
+                BigDecimal.valueOf(49), Currency.EUR, Currency.RUB));
 
-        assertThat(exchange.getAmountFrom(), Matchers.comparesEqualTo(BigDecimal.valueOf(11880.0)));
+        assertThat(exchange.getAmountFrom(), Matchers.comparesEqualTo(BigDecimal.valueOf(99.96)));
     }
 
 
     @Test(expected = IllegalArgumentException.class)
     public void handleExceptionHandler() {
-        service.handleExchange(new Exchange(BigDecimal.valueOf(0),
-                BigDecimal.valueOf(0), Currency.EUR, Currency.RUB, OperationType.GET));
+        service.handleExchange(new Exchange(OperationType.GET, BigDecimal.valueOf(0),
+                BigDecimal.valueOf(0), Currency.EUR, Currency.RUB));
     }
 }

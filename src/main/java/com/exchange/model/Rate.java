@@ -3,7 +3,6 @@ package com.exchange.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
@@ -21,7 +20,6 @@ public class Rate implements Serializable {
 
     @DecimalMin(value = "0.00", message = "Rate should be grater than 0.00 ")
     @Column(name = "rate")
-    @NumberFormat(pattern = "#0.00")
     private BigDecimal rate;
 
     @Id
