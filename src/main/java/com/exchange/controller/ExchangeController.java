@@ -11,14 +11,13 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "**/api/exchange")
-@ControllerAdvice
 @RequiredArgsConstructor
 class ExchangeController {
 
     private final ExchangeService service;
 
     @ResponseStatus(value = HttpStatus.CREATED)
-    @PostMapping(path = "/", consumes = "application/json", produces = "application/json")
+    @PostMapping(path = "/")
     public Exchange postCommission(@RequestBody @Valid Exchange exchange) {
         return service.handleExchange(exchange);
     }

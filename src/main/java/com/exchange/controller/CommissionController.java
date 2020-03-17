@@ -12,19 +12,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "**/api/commissions")
-@ControllerAdvice
 @RequiredArgsConstructor
 class CommissionController {
 
     private final ExchangeService service;
 
-    @GetMapping(path = "/", produces = "application/json")
+    @GetMapping(path = "/")
     public List<Commission> getCommission() {
         return service.getCommissionPt();
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
-    @PostMapping(path = "/", consumes = "application/json", produces = "application/json")
+    @PostMapping(path = "/")
     public Commission postCommission(@RequestBody @Valid Commission commission) {
         return service.createCommissionPt(commission);
     }

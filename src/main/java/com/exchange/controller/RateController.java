@@ -12,19 +12,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "**/api/exchange-rates")
-@ControllerAdvice
 @RequiredArgsConstructor
 class RateController {
 
     private final ExchangeService service;
 
-    @GetMapping(path = "/", produces = "application/json")
+    @GetMapping(path = "/")
     public List<Rate> getCommission() {
         return service.getRate();
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
-    @PostMapping(path = "/", consumes = "application/json", produces = "application/json")
+    @PostMapping(path = "/")
     public Rate postCommission(@RequestBody @Valid Rate rate) {
         return service.createRate(rate);
     }
