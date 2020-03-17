@@ -8,6 +8,6 @@ import java.io.Serializable;
 @Data
 public class CommissionId implements Serializable {
 
-    Currency from;
-    Currency to;
+    private Currency from;
+    private Currency to;
 }

@@ -26,18 +26,18 @@ public class Commission implements Serializable {
             "Commission percent should be in range 0.00 - 100.00")
     @Column(name = "commission")
     @NumberFormat(pattern = "#0.00")
-    BigDecimal commissionPt;
+    private BigDecimal commissionPt;
 
     @Id
     @Column(name = "currency_from")
     @Enumerated(EnumType.STRING)
     @NotNull
-    Currency from;
+    private Currency from;
 
     @Id
     @Column(name = "currency_to")
     @Enumerated(EnumType.STRING)
     @NotNull
-    Currency to;
+    private Currency to;
 }
 

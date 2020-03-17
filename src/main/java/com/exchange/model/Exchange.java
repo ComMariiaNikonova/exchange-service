@@ -19,19 +19,19 @@ public class Exchange implements Serializable {
 
     @DecimalMin(value = "0.00", message = "Amount be grater than 0.00 ")
     @NumberFormat(pattern = "#0,00")
-    BigDecimal amountFrom;
+    private BigDecimal amountFrom;
 
     @DecimalMin(value = "0.00", message = "Amount be grater than 0.00 ")
     @NumberFormat(pattern = "#0,00")
-    BigDecimal amountTo;
+    private BigDecimal amountTo;
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    Currency currencyFrom;
+    private Currency currencyFrom;
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    Currency currencyTo;
+    private Currency currencyTo;
 
     OperationType operationType;
 
