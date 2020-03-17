@@ -2,6 +2,7 @@ package com.exchange.service;
 
 import com.exchange.model.Commission;
 import com.exchange.model.Exchange;
+import com.exchange.model.OperationType;
 import com.exchange.model.Rate;
 import com.exchange.repository.CommissionRepository;
 import com.exchange.repository.RateRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,11 @@ public class ExchangeService {
     public final List<Commission> getCommissionPt() {
         return comissionRepository.findAll();
     }
+
+    static Predicate<Exchange> hasContractSupport = exchange -> (exchange.getAmountTo().compareTo(BigDecimal.ZERO) == 0
+                    && exchange.getOperationType().equals(OperationType.GET)) ||
+                    (exchange.getAmountFrom().compareTo(BigDecimal.ZERO) == 0
+                            && exchange.getOperationType().equals(OperationType.GIVE));
 
     public Commission createCommissionPt(Commission commission) {
         return comissionRepository.save(commission);
@@ -36,6 +43,13 @@ public class ExchangeService {
     }
 
     public Exchange handleExchange(Exchange exchange) {
+
+        if (hasContractSupport.test(exchange)) {
+            throw new IllegalArgumentException(
+                    "GET operationType associated with currencyTo NON Nullable value \n" +
+                            "GIVE operationType associated with currencyFrom NON Nullable value");
+        }
+
         Commission commission = comissionRepository.
                 findCommissionByFromAndTo(exchange.getCurrencyFrom(), exchange.getCurrencyTo());
 
@@ -44,20 +58,11 @@ public class ExchangeService {
 
         switch (exchange.getOperationType()) {
             case GET:
-                if (exchange.getAmountTo().compareTo(BigDecimal.ZERO) == 0) {
-                    throw new IllegalArgumentException(
-                            "GET operationType associated with currencyTo NON Nullable value");
-                }
                 setupExchangeGet(exchange, commission, rate);
                 break;
             case GIVE:
-                if (exchange.getAmountFrom().compareTo(BigDecimal.ZERO) == 0) {
-                    throw new IllegalArgumentException(
-                            "GIVE operationType associated with currencyFrom NON Nullable value");
-                } else {
-                    setupExchangeGive(exchange, commission, rate);
-                    break;
-                }
+                setupExchangeGive(exchange, commission, rate);
+                break;
         }
         return exchange;
     }
