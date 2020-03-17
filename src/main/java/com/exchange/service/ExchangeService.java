@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 @Service
@@ -25,10 +26,11 @@ public class ExchangeService {
         return comissionRepository.findAll();
     }
 
-    static Predicate<Exchange> hasContractSupport = exchange -> (exchange.getAmountTo().compareTo(BigDecimal.ZERO) == 0
-                    && exchange.getOperationType().equals(OperationType.GET)) ||
-                    (exchange.getAmountFrom().compareTo(BigDecimal.ZERO) == 0
-                            && exchange.getOperationType().equals(OperationType.GIVE));
+    static Predicate<Exchange> hasNoContractSupport = exchange -> ((Objects.isNull(exchange.getAmountTo()) ||
+            exchange.getAmountTo().compareTo(BigDecimal.ZERO) == 0)
+            && exchange.getOperationType().equals(OperationType.GET)) ||
+            ((Objects.isNull(exchange.getAmountFrom()) || exchange.getAmountFrom().compareTo(BigDecimal.ZERO) == 0)
+                    && exchange.getOperationType().equals(OperationType.GIVE));
 
     public Commission createCommissionPt(Commission commission) {
         return comissionRepository.save(commission);
@@ -44,9 +46,9 @@ public class ExchangeService {
 
     public Exchange handleExchange(Exchange exchange) {
 
-        if (hasContractSupport.test(exchange)) {
+        if (hasNoContractSupport.test(exchange)) {
             throw new IllegalArgumentException(
-                    "GET operationType associated with currencyTo NON Nullable value \n" +
+                    "GET operationType associated with currencyTo NON Nullable value;" +
                             "GIVE operationType associated with currencyFrom NON Nullable value");
         }
 
