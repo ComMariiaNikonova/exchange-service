@@ -1,12 +1,8 @@
 package com.exchange.model;
 
-import com.exchange.util.deserializer.CurrencyDeserializer;
-import com.exchange.util.serializer.BigDecimalSerializer;
-import com.exchange.util.serializer.CurrencySerializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
@@ -20,6 +16,8 @@ import java.math.BigDecimal;
 @Table(name = "commission")
 @IdClass(CommissionId.class)
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Commission implements Serializable {
 
     @DecimalMin(value = "0.00", message = "Commission percent should be grater than 0.00 " +
@@ -29,22 +27,16 @@ public class Commission implements Serializable {
 
     @Column(name = "commission")
     @NumberFormat(pattern = "#0,00")
-    @JsonDeserialize(using = NumberDeserializers.BigDecimalDeserializer.class)
-    @JsonSerialize(using = BigDecimalSerializer.class)
     BigDecimal commissionPt;
 
     @Id
     @Column(name = "currency_from")
-    @JsonDeserialize(using = CurrencyDeserializer.class)
-    @JsonSerialize(using = CurrencySerializer.class)
     @Enumerated(EnumType.STRING)
     @NotNull
     Currency from;
 
     @Id
     @Column(name = "currency_to")
-    @JsonSerialize(using = CurrencySerializer.class)
-    @JsonDeserialize(using = CurrencyDeserializer.class)
     @Enumerated(EnumType.STRING)
     @NotNull
     Currency to;

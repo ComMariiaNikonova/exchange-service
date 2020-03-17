@@ -2,9 +2,8 @@ package com.exchange.controller;
 
 import com.exchange.model.Rate;
 import com.exchange.service.ExchangeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -13,21 +12,21 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "**/api/exchange-rates")
+@ControllerAdvice
+@RequiredArgsConstructor
 class RateController {
 
-
-    @Autowired
-    private ExchangeService service;
+    private final ExchangeService service;
 
     @GetMapping(path = "/", produces = "application/json")
-    public ResponseEntity<List<Rate>> getCommission() {
-        return new ResponseEntity(service.getRate(), HttpStatus.OK);
+    public List<Rate> getCommission() {
+        return service.getRate();
     }
 
+    @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(path = "/", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Rate> postCommission(@RequestBody @Valid Rate rate) {
-        service.postRate(rate);
-        return new ResponseEntity(rate, HttpStatus.CREATED);
+    public Rate postCommission(@RequestBody @Valid Rate rate) {
+        return service.createRate(rate);
     }
 }
 
