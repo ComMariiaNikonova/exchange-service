@@ -70,21 +70,18 @@ public class ExchangeService {
     }
 
     private void setupExchangeGet(Exchange exchange, Commission commission, Rate rate) {
-        BigDecimal commissionAmount, amountByRate;
+        BigDecimal commissionAmount;
         commissionAmount = exchange.getAmountTo().
                 divide(BigDecimal.valueOf(100)).
                 multiply(commission.getCommissionPt());
-        amountByRate = exchange.getAmountTo().multiply(rate.getRate());
-        exchange.setAmountFrom(amountByRate.add(commissionAmount));
+        exchange.setAmountFrom(exchange.getAmountTo().add(commissionAmount).multiply(rate.getRate()));
     }
 
     private void setupExchangeGive(Exchange exchange, Commission commission, Rate rate) {
-        BigDecimal commissionAmount, amountByRate;
+        BigDecimal commissionAmount;
         commissionAmount = exchange.getAmountFrom().
                 divide(BigDecimal.valueOf(100)).
                 multiply(commission.getCommissionPt());
-        amountByRate = exchange.getAmountFrom().subtract(commissionAmount).multiply(rate.getRate());
-
-        exchange.setAmountTo(amountByRate);
+        exchange.setAmountTo(exchange.getAmountFrom().subtract(commissionAmount).multiply(rate.getRate()));
     }
 }
