@@ -20,10 +20,6 @@ public class DataSourceSetup implements CommandLineRunner {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    public static void main(String[] args) {
-        SpringApplication.run(ApplicationExchangeService.class, args);
-    }
-
     @Override
     public void run(String... strings) {
 
