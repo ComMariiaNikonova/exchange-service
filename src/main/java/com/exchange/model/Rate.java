@@ -33,5 +33,10 @@ public class Rate implements Serializable {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Currency to;
+
+    public Rate roundDecimal() {
+        setRate(rate.setScale(2, BigDecimal.ROUND_HALF_UP));
+        return this;
+    }
 }
 

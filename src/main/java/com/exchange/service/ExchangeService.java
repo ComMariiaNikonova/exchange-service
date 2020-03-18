@@ -18,18 +18,16 @@ import java.util.function.Predicate;
 @RequiredArgsConstructor
 public class ExchangeService {
 
+    static Predicate<Exchange> hasNoContractSupport = exchange -> (hasNoContractSupportPredicate(exchange));
     private final CommissionRepository commissionRepository;
-
     private final RateRepository rateRepository;
 
     public final List<Commission> getCommissionPt() {
         return commissionRepository.findAll();
     }
 
-    static Predicate<Exchange> hasNoContractSupport = exchange -> (hasNoContractSupportPredicate(exchange));
-
     public Commission createCommissionPt(Commission commission) {
-        return commissionRepository.save(commission);
+        return commissionRepository.save(commission).roundDecimal();
     }
 
     public List<Rate> getRate() {
@@ -37,7 +35,7 @@ public class ExchangeService {
     }
 
     public Rate createRate(Rate rate) {
-        return rateRepository.save(rate);
+        return rateRepository.save(rate).roundDecimal();
     }
 
     public Exchange handleExchange(Exchange exchange) {
@@ -77,9 +75,8 @@ public class ExchangeService {
         commissionAmount = exchange.getAmountTo().
                 divide(BigDecimal.valueOf(100)).
                 multiply(commission.getCommissionPt());
-        exchange.setAmountFrom(exchange.getAmountTo().add(commissionAmount).multiply(rate.getRate()).
-                setScale(2, BigDecimal.ROUND_HALF_UP));
-        exchange.setAmountTo(exchange.getAmountTo().setScale(2, BigDecimal.ROUND_HALF_UP));
+        exchange.setAmountFrom(exchange.getAmountTo().add(commissionAmount).multiply(rate.getRate()));
+        exchange.roundDecimal();
     }
 
     private void setupExchangeGive(Exchange exchange, Commission commission, Rate rate) {
@@ -87,9 +84,8 @@ public class ExchangeService {
         commissionAmount = exchange.getAmountFrom().
                 divide(BigDecimal.valueOf(100)).
                 multiply(commission.getCommissionPt());
-        exchange.setAmountTo(exchange.getAmountFrom().subtract(commissionAmount).multiply(rate.getRate()).
-                setScale(2, BigDecimal.ROUND_HALF_UP));
-        exchange.setAmountFrom(exchange.getAmountFrom().setScale(2, BigDecimal.ROUND_HALF_UP));
+        exchange.setAmountTo(exchange.getAmountFrom().subtract(commissionAmount).multiply(rate.getRate()));
+        exchange.roundDecimal();
     }
 
     private static boolean hasNoContractSupportPredicate(Exchange exchange) {

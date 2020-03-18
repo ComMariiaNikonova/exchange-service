@@ -28,4 +28,9 @@ public class Exchange implements Serializable {
     @NotNull
     private Currency currencyTo;
 
+    public Exchange roundDecimal() {
+        setAmountTo(amountTo.setScale(2, BigDecimal.ROUND_HALF_UP));
+        setAmountFrom(amountFrom.setScale(2, BigDecimal.ROUND_HALF_UP));
+        return this;
+    }
 }

@@ -37,5 +37,10 @@ public class Commission implements Serializable {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Currency to;
+
+    public Commission roundDecimal() {
+        setCommissionPt(commissionPt.setScale(2, BigDecimal.ROUND_HALF_UP));
+        return this;
+    }
 }
 
